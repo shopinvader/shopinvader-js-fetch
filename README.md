@@ -5,7 +5,7 @@ Also fetch Elasticsearch indices to retrieve data used by the Shopinvader API (p
 
 ## Features
 
-- Fetch **Shopinvader Odoo API **
+- Fetch **Shopinvader Odoo API**
 - Support **Elasticsearch** indicies data fetcher
 - **Events**
 
@@ -16,11 +16,13 @@ Also fetch Elasticsearch indices to retrieve data used by the Shopinvader API (p
 #### NPM
 
 [TODO] Need a registration to NPM
+
 `npm install shopinvader-js --save`
 
 #### YARN
 
 [TODO] Need a registration to NPM
+
 `yarn add shopinvader-js`
 
 ## Usage
@@ -149,3 +151,6 @@ shopinvader.on("request:before", (service, args) => {
   }
 })
 ```
+## License
+
+[License](./LICENSE)
