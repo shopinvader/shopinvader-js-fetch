@@ -5,7 +5,7 @@ class ErpFetch {
    * Fetcher to Odoo Rest API
    * @param {string} baseUrl base URL of the REST API
    * @param {string} websiteKey Website Key
-   * @param {object} transport fetch object
+   * @param {object} transport fetch function
    */
   constructor(baseUrl, websiteKey, transport) {
     this.baseUrl = baseUrl
