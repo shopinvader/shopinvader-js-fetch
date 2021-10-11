@@ -1,3 +1,2 @@
-export { default as Shopinvader } from './lib/Shopinvader'
-export { default as ErpService } from './lib/ErpService'
-export { default as ElasticService } from './lib/ElasticService'
+export {default as ElasticFetch} from "./ElasticFetch"
+export {default as ErpFetch} from "./ErpFetch"
