@@ -1,0 +1,19 @@
+{
+  "name": "@shopinvader/fetch",
+  "version": "1.0.0",
+  "description": "Fetch Odoo Rest API contents or Elasticsearch data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-babel": "^5.3.1"
+  },
+  "dependencies": {
+    
+  }
+}
