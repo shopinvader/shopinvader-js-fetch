@@ -1,2 +1,3 @@
-export {default as ElasticFetch} from "./ElasticFetch"
-export {default as ErpFetch} from "./ErpFetch"
+const ElasticFetch = require("./ElasticFetch")
+const ErpFetch = require("./ErpFetch")
+module.exports = {ElasticFetch, ErpFetch}

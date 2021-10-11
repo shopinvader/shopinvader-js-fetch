@@ -3,9 +3,7 @@
 class ElasticFetch {
   constructor(baseUrl, indexName, transport) {
     this.ressource = [baseUrl, indexName].join("/")
-    if (transport === "function") {
-      this._fetch = transport || fetch
-    }
+    this._fetch = transport || fetch
   }
 
   /**
@@ -28,24 +26,31 @@ class ElasticFetch {
         body: JSON.stringify(init.body),
       },
     }
-    return this._fetch(new URL(ressource, this.ressource), init).then(
-      (response) => response.json()
-    )
+    const request = this._fetch
+    const url = [this.ressource, ressource]
+    return request(url.join("/"), init).then((response) => response.json())
   }
 
   find(field, value) {
     const terms = {}
     terms[field] = [value]
-    return this.fetsearchch(terms)
-  }
-
-  search(query = {}, size = 20) {
-    return this.fetch({
-      body: {
-        query,
-        size,
+    return this.search({
+      query: {
+        terms,
       },
     })
   }
+
+  search(
+    body = {
+      query: {
+        match_all: {},
+      },
+    }
+  ) {
+    return this.fetch({
+      body,
+    })
+  }
 }
-export default ElasticFetch
+module.exports = ElasticFetch

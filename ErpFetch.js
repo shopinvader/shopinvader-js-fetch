@@ -67,4 +67,4 @@ class ErpFetch {
     })
   }
 }
-export default ErpFetch
+module.exports = ErpFetch
