@@ -12,7 +12,7 @@ class ElasticFetch {
    * @param {Object} init custom settings that you want to apply to the request (method, headers ...)
    * @returns Promise
    */
-  fetch(init = {}, ressource = "_search") {
+  fetch_json(init = {}, ressource = "_search") {
     init.headers = {
       ...init.headers,
       ...{
@@ -48,7 +48,7 @@ class ElasticFetch {
       },
     }
   ) {
-    return this.fetch({
+    return this.fetch_json({
       body,
     })
   }
