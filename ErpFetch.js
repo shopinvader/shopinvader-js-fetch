@@ -7,7 +7,7 @@ class ErpFetch {
    * @param {string} websiteKey Website Key
    * @param {object} transport fetch function
    */
-  constructor(baseUrl, websiteKey, transport) {
+  constructor (baseUrl, websiteKey, transport) {
     this.baseUrl = baseUrl
     this.websiteKey = websiteKey
     this._fetch = transport || fetch
@@ -18,18 +18,21 @@ class ErpFetch {
    * @param {Object} init custom settings that you want to apply to the request (method, headers ...)
    * @returns Promise
    */
-  fetch(ressource, init = {}) {
+  fetch (ressource, init = {}) {
     init.headers = {
       ...init.headers,
       ...{
-        "Content-Type": "application/json",
         "WEBSITE-UNIQUE-KEY": this.websiteKey,
       },
     }
     init.body = JSON.stringify(init.body)
     const request = this._fetch
     const url = [this.baseUrl, ressource]
-    return request(url.join("/"), init).then((response) => response.json())
+    return request(url.join("/"), init)
+      .then((response) => response.json())
+      .then(({ data }) => {
+        return data
+      })
   }
 
   /**
@@ -39,11 +42,17 @@ class ErpFetch {
    * @param {object} init custom settings that you want to apply to the request (method, headers ...)
    * @returns Promise
    */
-  post(ressource, body = {}, init = {}) {
+  post (ressource, body = {}, init = {}) {
+    init.headers = {
+      ...init.headers,
+      ...{
+        "Content-Type": "application/json",
+      },
+    }
     return this.fetch(ressource, {
       ...init,
-      ...{body},
-      ...{method: "POST"},
+      ...{ body },
+      ...{ method: "POST" },
     })
   }
 
@@ -54,7 +63,7 @@ class ErpFetch {
    * @param {object} init custom settings that you want to apply to the request (method, headers ...)
    * @returns Promise
    */
-  get(ressource, query, init) {
+  get (ressource, query, init) {
     let url = ressource
     if (query === Object) {
       const params = new URLSearchParams(query)
@@ -63,7 +72,7 @@ class ErpFetch {
 
     return this.fetch(url, {
       ...init,
-      ...{method: "GET"},
+      ...{ method: "GET" },
     })
   }
 }
