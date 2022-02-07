@@ -30,7 +30,7 @@ class ErpFetch {
     const url = [this.baseUrl, ressource]
     return request(url.join("/"), init)
       .then((response) => response.json())
-      .then(({ data }) => {
+      .then((data) => {
         return data
       })
   }
