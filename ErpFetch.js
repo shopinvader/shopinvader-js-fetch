@@ -57,10 +57,31 @@ class ErpFetch {
   }
 
   /**
+   * Put Request to the Rest API
+   * @param {string} ressource API Endpoint
+   * @param {object} body Body parameters
+   * @param {object} init custom settings that you want to apply to the request (headers ...)
+   * @returns Promise
+   */
+  put (ressource, body = {}, init = {}) {
+    init.headers = {
+      ...init.headers,
+      ...{
+        "Content-Type": "application/json",
+      },
+    }
+    return this.fetch(ressource, {
+      ...init,
+      ...{ body },
+      ...{ method: "PUT" },
+    })
+  }
+
+  /**
    * Post Request to the Rest API
    * @param {string} ressource API Endpoint
    * @param {object} query query string
-   * @param {object} init custom settings that you want to apply to the request (method, headers ...)
+   * @param {object} init custom settings that you want to apply to the request (headers ...)
    * @returns Promise
    */
   get (ressource, query, init) {
@@ -73,6 +94,26 @@ class ErpFetch {
     return this.fetch(url, {
       ...init,
       ...{ method: "GET" },
+    })
+  }
+  /**
+   * Delete Request to the Rest API
+   * @param {string} ressource API Endpoint
+   * @param {object} query query string
+   * @param {object} init custom settings that you want to apply to the request (headers ...)
+   * @returns Promise
+   */
+  delete (ressource, body = {}, init = {}) {
+    init.headers = {
+      ...init.headers,
+      ...{
+        "Content-Type": "application/json",
+      },
+    }
+    return this.fetch(ressource, {
+      ...init,
+      ...{ body },
+      ...{ method: "DELETE" },
     })
   }
 }
