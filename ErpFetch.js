@@ -86,7 +86,7 @@ class ErpFetch {
    */
   get (ressource, query, init) {
     let url = ressource
-    if (query === Object) {
+    if (typeof query === 'object') {
       const params = new URLSearchParams(query)
       url += "?" + params.toString()
     }
