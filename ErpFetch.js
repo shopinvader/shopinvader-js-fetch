@@ -98,6 +98,13 @@ class ErpFetch {
     let url = resource
     if (typeof query === 'object') {
       const params = new URLSearchParams(query)
+      /** Search for Array parameters and split them into duplicate entries */
+      for (const [key, value] of Object.entries(query)) {
+        if (Array.isArray(value)) {
+          params.delete(key);
+          value.forEach((v) => params.append(key, v));
+        }
+      }
       url += "?" + params.toString()
     }
     return this.fetch(url, {
