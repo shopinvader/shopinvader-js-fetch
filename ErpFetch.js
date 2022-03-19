@@ -16,7 +16,7 @@ class ErpFetch {
    * Make HTTP requests to resource
    * @param {String} resource the resource that you wish to fetch
    * @param {Object} init custom settings that you want to apply to the request (method, headers ...)
-   * @param {String} responseType 'blob', 'text', 'json', 'arrayBuffer' (json is the default)
+   * @param {String} responseType 'blob', 'text', 'json', 'arrayBuffer', 'response' (json is the default)
    * @returns Promise
    */
   fetch (resource, init = {}, responseType = 'json') {
@@ -36,8 +36,10 @@ class ErpFetch {
         return response.text()
       } else if (responseType === 'arrayBuffer') {
         return response.arrayBuffer()
-      } else {
+      } else if (responseType === 'json') {
         return response.json()
+      } else {
+        return response;
       }
     })
   }
@@ -47,7 +49,7 @@ class ErpFetch {
    * @param {string} resource API Endpoint
    * @param {object} body Body parameters
    * @param {object} init custom settings that you want to apply to the request (method, headers ...)
-   * @param {String} responseType 'blob', 'text', 'json', 'arrayBuffer' (json is the default)
+   * @param {String} responseType 'blob', 'text', 'json', 'arrayBuffer', 'response' (json is the default)
    * @returns Promise
    */
   post (resource, body = {}, init = {}, responseType = 'json') {
@@ -69,7 +71,7 @@ class ErpFetch {
    * @param {string} resource API Endpoint
    * @param {object} body Body parameters
    * @param {object} init custom settings that you want to apply to the request (headers ...)
-   * @param {String} responseType 'blob', 'text', 'json', 'arrayBuffer' (json is the default)
+   * @param {String} responseType 'blob', 'text', 'json', 'arrayBuffer', 'response' (json is the default)
    * @returns Promise
    */
   put (resource, body = {}, init = {}, responseType = 'json') {
@@ -91,7 +93,7 @@ class ErpFetch {
    * @param {string} resource API Endpoint
    * @param {object} query query string
    * @param {object} init custom settings that you want to apply to the request (headers ...)
-   * @param {String} responseType 'blob', 'text', 'json', 'arrayBuffer' (json is the default)
+   * @param {String} responseType 'blob', 'text', 'json', 'arrayBuffer', 'response' (json is the default)
    * @returns Promise
    */
   get (resource, query, init, responseType = 'json') {
@@ -117,7 +119,7 @@ class ErpFetch {
    * @param {string} resource API Endpoint
    * @param {object} query query string
    * @param {object} init custom settings that you want to apply to the request (headers ...)
-   * @param {String} responseType 'blob', 'text', 'json', 'arrayBuffer' (json is the default)
+   * @param {String} responseType 'blob', 'text', 'json', 'arrayBuffer', 'response' (json is the default)
    * @returns Promise
    */
   delete (resource, body = {}, init = {}, responseType = 'json') {
