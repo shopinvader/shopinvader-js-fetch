@@ -1,6 +1,6 @@
 "use strict"
 
-class ErpFetch {
+export class ErpFetch {
   /**
    * Fetcher to Odoo Rest API
    * @param {string} baseUrl base URL of the REST API
@@ -136,4 +136,3 @@ class ErpFetch {
     }, responseType)
   }
 }
-module.exports = ErpFetch

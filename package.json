@@ -2,7 +2,8 @@
   "name": "@shopinvader/fetch",
   "version": "1.0.0",
   "description": "Fetch Odoo Rest API contents or Elasticsearch data",
-  "main": "index.js",
+  "type": "module",
+  "module": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
