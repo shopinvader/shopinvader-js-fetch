@@ -1,6 +1,6 @@
 "use strict"
 
-class ElasticFetch {
+export class ElasticFetch {
   constructor(baseUrl, indexName, transport) {
     this.ressource = [baseUrl, indexName].join("/")
     this._fetch = transport || fetch
@@ -53,4 +53,3 @@ class ElasticFetch {
     })
   }
 }
-module.exports = ElasticFetch
