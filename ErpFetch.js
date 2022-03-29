@@ -29,7 +29,7 @@ class ErpFetch {
     init.body = JSON.stringify(init.body)
     const request = this._fetch
     const url = [this.baseUrl, resource]
-    return request(url.join("/"), init).then((response) => {
+    return request(url.join(''), init).then((response) => {
       if (responseType === 'blob') {
         return response.blob()
       } else if (responseType === 'text') {
