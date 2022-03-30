@@ -1,3 +1,2 @@
-const ElasticFetch = require("./ElasticFetch")
-const ErpFetch = require("./ErpFetch")
-module.exports = {ElasticFetch, ErpFetch}
+export { ErpFetch } from './ErpFetch.js';
+export { ElasticFetch } from './ElasticFetch.js';
