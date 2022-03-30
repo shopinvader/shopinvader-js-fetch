@@ -1,4 +1,4 @@
-# Shopinvader JS
+# @shopinvader/fetch
 
 Library to provide a Shopinvader API client support for client-side or server-side applications.
 Also fetch Elasticsearch indices to retrieve data used by the Shopinvader API (products and categories)
@@ -16,13 +16,13 @@ Also fetch Elasticsearch indices to retrieve data used by the Shopinvader API (p
 
 [TODO] Need a registration to NPM
 
-`npm install shopinvader-js --save`
+`npm install https://github.com/shopinvader/shopinvader-js-fetch --save`
 
 #### YARN
 
 [TODO] Need a registration to NPM
 
-`yarn add shopinvader-js`
+`yarn add https://github.com/shopinvader/shopinvader-js-fetchshopinvader-jsshopinvader-js`
 
 ## Usage
 
@@ -35,7 +35,7 @@ const erp = new ErpFetch(
 /* API Call : Get user addresses*/
 erp.get("/addresses").then((addresses) => {
   console.log(addresses)
-})
+shopinvader-js})
 ```
 
 ## License
