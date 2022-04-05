@@ -1,5 +1,13 @@
 "use strict"
 
+class HttpErrorResponse extends Error {
+  constructor (message = 'Something went wrong', response) {
+    super(message);
+    this.name = 'HttpErrorResponse';
+    this.response = response
+  }
+}
+
 export class ErpFetch {
   /**
    * Fetcher to Odoo Rest API
@@ -12,6 +20,20 @@ export class ErpFetch {
     this.websiteKey = websiteKey
     this._fetch = transport || fetch
   }
+
+  /** @return true if the headers contains a Content-Type */
+  haveContentType (headers) {
+    return headers
+      && headers.hasOwnProperty('Content-Type')
+      && headers['Content-Type'].length > 0
+  }
+
+  /** @return true if the headers contains a Content-Type 'application/json' */
+  isJsonContentType (headers) {
+    return this.haveContentType(headers)
+      && headers['Content-Type'].indexOf('application/json') > -1
+  }
+
   /**
    * Make HTTP requests to resource
    * @param {String} resource the resource that you wish to fetch
@@ -26,20 +48,27 @@ export class ErpFetch {
         "WEBSITE-UNIQUE-KEY": this.websiteKey,
       },
     }
-    init.body = JSON.stringify(init.body)
+    if (this.isJsonContentType(init.headers)) {
+      init.body = JSON.stringify(init.body)
+    }
     const request = this._fetch
     const url = new URL(resource, this.baseUrl).href
     return request(url, init).then((response) => {
-      if (responseType === 'blob') {
-        return response.blob()
-      } else if (responseType === 'text') {
-        return response.text()
-      } else if (responseType === 'arrayBuffer') {
-        return response.arrayBuffer()
-      } else if (responseType === 'json') {
-        return response.json()
+      if (response.ok) {
+        if (responseType === 'blob') {
+          return response.blob()
+        } else if (responseType === 'text') {
+          return response.text()
+        } else if (responseType === 'arrayBuffer') {
+          return response.arrayBuffer()
+        } else if (responseType === 'json') {
+          return response.json()
+        } else {
+          return response;
+        }
       } else {
-        return response;
+        throw new HttpErrorResponse('Http failure response for ' + url + ': ' +
+          response.status + ' ' + response.statusText, response);
       }
     })
   }
@@ -53,11 +82,8 @@ export class ErpFetch {
    * @returns Promise
    */
   post (resource, body = {}, init = {}, responseType = 'json') {
-    init.headers = {
-      ...init.headers,
-      ...{
-        "Content-Type": "application/json",
-      },
+    if (!this.haveContentType(init.headers)) {
+      init.headers = { ...init.headers, ...{ 'Content-Type': 'application/json' } }
     }
     return this.fetch(resource, {
       ...init,
@@ -75,11 +101,8 @@ export class ErpFetch {
    * @returns Promise
    */
   put (resource, body = {}, init = {}, responseType = 'json') {
-    init.headers = {
-      ...init.headers,
-      ...{
-        "Content-Type": "application/json",
-      },
+    if (!this.haveContentType(init.headers)) {
+      init.headers = { ...init.headers, ...{ 'Content-Type': 'application/json' } }
     }
     return this.fetch(resource, {
       ...init,
@@ -123,11 +146,8 @@ export class ErpFetch {
    * @returns Promise
    */
   delete (resource, body = {}, init = {}, responseType = 'json') {
-    init.headers = {
-      ...init.headers,
-      ...{
-        "Content-Type": "application/json",
-      },
+    if (!this.haveContentType(init.headers)) {
+      init.headers = { ...init.headers, ...{ 'Content-Type': 'application/json' } }
     }
     return this.fetch(resource, {
       ...init,
