@@ -23,7 +23,8 @@ export class ErpFetch {
 
   /** @return true if the headers contains a Content-Type */
   haveContentType (headers) {
-    return headers
+    return headers !== null
+      && headers !== undefined
       && headers.hasOwnProperty('Content-Type')
       && headers['Content-Type'].length > 0
   }
@@ -32,6 +33,18 @@ export class ErpFetch {
   isJsonContentType (headers) {
     return this.haveContentType(headers)
       && headers['Content-Type'].indexOf('application/json') > -1
+  }
+
+  /** @return true if the body seems like JSON and the Content-type is not set yet. */
+  needsDefaultJsonContentType (headers, body) {
+    return !this.haveContentType(headers)
+      && body !== null
+      && body !== undefined
+      && !(body instanceof FormData)    // object but not JSON
+      && !(body instanceof Blob)        // object but not JSON
+      && !(body instanceof ArrayBuffer) // object but not JSON
+      && typeof body !== 'string'     // should be text/plain
+      && (typeof body === 'object' || typeof body === 'number' || typeof body === 'boolean') // Ok, json
   }
 
   /**
@@ -82,7 +95,7 @@ export class ErpFetch {
    * @returns Promise
    */
   post (resource, body = {}, init = {}, responseType = 'json') {
-    if (!this.haveContentType(init.headers)) {
+    if (this.needsDefaultJsonContentType(init?.headers, body)) {
       init.headers = { ...init.headers, ...{ 'Content-Type': 'application/json' } }
     }
     return this.fetch(resource, {
@@ -101,7 +114,7 @@ export class ErpFetch {
    * @returns Promise
    */
   put (resource, body = {}, init = {}, responseType = 'json') {
-    if (!this.haveContentType(init.headers)) {
+    if (this.needsDefaultJsonContentType(init?.headers, body)) {
       init.headers = { ...init.headers, ...{ 'Content-Type': 'application/json' } }
     }
     return this.fetch(resource, {
@@ -146,7 +159,7 @@ export class ErpFetch {
    * @returns Promise
    */
   delete (resource, body = {}, init = {}, responseType = 'json') {
-    if (!this.haveContentType(init.headers)) {
+    if (this.needsDefaultJsonContentType(init?.headers, body)) {
       init.headers = { ...init.headers, ...{ 'Content-Type': 'application/json' } }
     }
     return this.fetch(resource, {
