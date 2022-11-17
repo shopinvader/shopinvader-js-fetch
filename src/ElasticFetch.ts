@@ -1,7 +1,9 @@
-"use strict"
+import { FetchBody, ElasticQueryBody } from './Types'
 
 export class ElasticFetch {
-  constructor(baseUrl, indexName, transport) {
+  ressource: string
+  _fetch: Function
+  constructor(baseUrl: string, indexName: string, transport: Function) {
     this.ressource = [baseUrl, indexName].join("/")
     this._fetch = transport || fetch
   }
@@ -12,7 +14,7 @@ export class ElasticFetch {
    * @param {Object} init custom settings that you want to apply to the request (method, headers ...)
    * @returns Promise
    */
-  fetch_json(init = {}, ressource = "_search") {
+  fetch_json(init: FetchBody = {}, ressource: string = "_search"): Promise<any> {
     init.headers = {
       ...init.headers,
       ...{
@@ -28,11 +30,11 @@ export class ElasticFetch {
     }
     const request = this._fetch
     const url = [this.ressource, ressource]
-    return request(url.join("/"), init).then((response) => response.json())
+    return request(url.join("/"), init).then((response: any) => response?.json() || {})
   }
 
-  find(field, value) {
-    const terms = {}
+  find(field: string, value: string): Promise<any> {
+    const terms: any = {}
     terms[field] = [value]
     return this.search({
       query: {
@@ -42,12 +44,12 @@ export class ElasticFetch {
   }
 
   search(
-    body = {
+    body: ElasticQueryBody = {
       query: {
         match_all: {},
       },
     }
-  ) {
+  ): Promise<any> {
     return this.fetch_json({
       body,
     })
