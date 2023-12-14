@@ -75,7 +75,12 @@ export class ErpFetch {
         } else if (responseType === 'arrayBuffer') {
           return response.arrayBuffer()
         } else if (responseType === 'json') {
-          return response.json()
+          if (response.status === 204) {
+            // empty response
+            return null;
+          } else {
+            return response.json();
+          }
         } else {
           return response;
         }
