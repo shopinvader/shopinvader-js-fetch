@@ -86,6 +86,12 @@ export class ErpFetch {
           return response;
         }
       } else {
+        if(response.status === 400) {
+          const message = response?.json()
+            .then((data: any) => data?.detail || data?.message || response.statusText)
+            .catch(() => response.statusText)
+          throw new Error(message)
+        }
         throw new HttpErrorResponse('Http failure response for ' + url + ': ' +
           response.status + ' ' + response.statusText, response);
       }
