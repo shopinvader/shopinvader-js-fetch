@@ -1,7 +1,11 @@
 "use strict"
 
+import { FetchHeaders } from "./Types";
+
 class HttpErrorResponse extends Error {
-  constructor (message = 'Something went wrong', response) {
+  name: string;
+  response: any;
+  constructor(message = 'Something went wrong', response: any) {
     super(message);
     this.name = 'HttpErrorResponse';
     this.response = response
@@ -9,34 +13,36 @@ class HttpErrorResponse extends Error {
 }
 
 export class ErpFetch {
+  baseUrl: string
+  websiteKey: string
+  _fetch: Function
   /**
    * Fetcher to Odoo Rest API
    * @param {string} baseUrl base URL of the REST API
    * @param {string} websiteKey Website Key
    * @param {object} transport fetch function
    */
-  constructor (baseUrl, websiteKey, transport) {
+  constructor(baseUrl: string, websiteKey: string, transport: Function) {
     this.baseUrl = baseUrl
     this.websiteKey = websiteKey
     this._fetch = transport || fetch
   }
 
   /** @return true if the headers contains a Content-Type */
-  haveContentType (headers) {
+  haveContentType(headers: FetchHeaders): boolean {
     return headers !== null
       && headers !== undefined
-      && headers.hasOwnProperty('Content-Type')
-      && headers['Content-Type'].length > 0
+      && headers?.['Content-Type']?.length > 0
   }
 
   /** @return true if the headers contains a Content-Type 'application/json' */
-  isJsonContentType (headers) {
+  isJsonContentType(headers: FetchHeaders): boolean {
     return this.haveContentType(headers)
       && headers['Content-Type'].indexOf('application/json') > -1
   }
 
   /** @return true if the body seems like JSON and the Content-type is not set yet. */
-  needsDefaultJsonContentType (headers, body) {
+  needsDefaultJsonContentType(headers: FetchHeaders, body: any): boolean {
     return !this.haveContentType(headers)
       && body !== null
       && body !== undefined
@@ -54,7 +60,7 @@ export class ErpFetch {
    * @param {String} responseType 'blob', 'text', 'json', 'arrayBuffer', 'response' (json is the default)
    * @returns Promise
    */
-  fetch (resource, init = {}, responseType = 'json') {
+  fetch(resource: string, init: any = {}, responseType: string = 'json'): Promise<any> {
     init.headers = {
       ...init.headers,
       ...{
@@ -64,10 +70,10 @@ export class ErpFetch {
     if (this.isJsonContentType(init.headers)) {
       init.body = JSON.stringify(init.body)
     }
-    const request = this._fetch
-    const url = new URL(resource, this.baseUrl).href
-    return request(url, init).then((response) => {
-      if (response.ok) {
+    const request: Function = this._fetch
+    const url: string = new URL(resource, this.baseUrl).href
+    return request(url, init).then((response: any) => {
+      if (response?.ok) {
         if (responseType === 'blob') {
           return response.blob()
         } else if (responseType === 'text') {
@@ -80,6 +86,12 @@ export class ErpFetch {
           return response;
         }
       } else {
+        if(response.status === 400) {
+          const message = response?.json()
+            .then((data: any) => data?.detail || data?.message || response.statusText)
+            .catch(() => response.statusText)
+          throw new Error(message)
+        }
         throw new HttpErrorResponse('Http failure response for ' + url + ': ' +
           response.status + ' ' + response.statusText, response);
       }
@@ -94,7 +106,7 @@ export class ErpFetch {
    * @param {String} responseType 'blob', 'text', 'json', 'arrayBuffer', 'response' (json is the default)
    * @returns Promise
    */
-  post (resource, body = {}, init = {}, responseType = 'json') {
+  post(resource: string, body: any = {}, init: any = {}, responseType: string = 'json'): Promise<any> {
     if (this.needsDefaultJsonContentType(init?.headers, body)) {
       init.headers = { ...init.headers, ...{ 'Content-Type': 'application/json' } }
     }
@@ -113,7 +125,7 @@ export class ErpFetch {
    * @param {String} responseType 'blob', 'text', 'json', 'arrayBuffer', 'response' (json is the default)
    * @returns Promise
    */
-  put (resource, body = {}, init = {}, responseType = 'json') {
+  put(resource: string, body: any = {}, init: any = {}, responseType: string = 'json'): Promise<any> {
     if (this.needsDefaultJsonContentType(init?.headers, body)) {
       init.headers = { ...init.headers, ...{ 'Content-Type': 'application/json' } }
     }
@@ -132,7 +144,7 @@ export class ErpFetch {
    * @param {String} responseType 'blob', 'text', 'json', 'arrayBuffer', 'response' (json is the default)
    * @returns Promise
    */
-  get (resource, query, init, responseType = 'json') {
+  get(resource: string, query: any, init: any, responseType: string = 'json'): Promise<any> {
     let url = resource
     if (typeof query === 'object') {
       const params = new URLSearchParams(query)
@@ -158,7 +170,7 @@ export class ErpFetch {
    * @param {String} responseType 'blob', 'text', 'json', 'arrayBuffer', 'response' (json is the default)
    * @returns Promise
    */
-  delete (resource, body = {}, init = {}, responseType = 'json') {
+  delete(resource: string, body: any = {}, init: any = {}, responseType: string = 'json'): Promise<any> {
     if (this.needsDefaultJsonContentType(init?.headers, body)) {
       init.headers = { ...init.headers, ...{ 'Content-Type': 'application/json' } }
     }
